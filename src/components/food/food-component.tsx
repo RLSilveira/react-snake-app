@@ -1,6 +1,6 @@
 import React from 'react';
 import './food-component.css';
-import logo from '../../logo.svg';
+import logo from 'food.png';
 
 const FoodComponent = () => {
     return (
