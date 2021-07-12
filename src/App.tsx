@@ -6,8 +6,8 @@ import JogoPage from './pages/game/game-page';
 import LoginPage from './pages/start/start-page';
 import FoodComponent from './components/food/food-component';
 
-
 function App() {
+
   return (
 
     <Router>
@@ -28,6 +28,7 @@ function App() {
           >
             Learn React
           </a>
+
         </header>
       </div>
 
