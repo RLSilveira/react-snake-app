@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import JogoPage from './pages/game/game-page';
-import LoginPage from './pages/start/start-page';
+import GamePage from './pages/game/game-page';
+import StartPage from './pages/start/start-page';
 
 function App() {
 
@@ -20,11 +20,11 @@ function App() {
           <Switch>
 
             <Route path="/game">
-              <JogoPage></JogoPage>
+              <GamePage></GamePage>
             </Route>
 
             <Route path="/">
-              <LoginPage></LoginPage>
+              <StartPage></StartPage>
             </Route>
 
           </Switch>
