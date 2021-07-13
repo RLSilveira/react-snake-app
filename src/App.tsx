@@ -8,18 +8,18 @@ function App() {
 
   return (
 
-    <Router>
 
-      <div className="App">
-        <header className="App-header">
-          Hackthon Herval - Sneake Game
-        </header>
+    <div className="App">
+      <header className="App-header">
+        Hackthon Herval - Sneake Game
+      </header>
 
-        <div className="App-content">
+      <div className="App-content">
 
+        <Router>
           <Switch>
 
-            <Route path="/jogo">
+            <Route path="/game">
               <JogoPage></JogoPage>
             </Route>
 
@@ -28,12 +28,10 @@ function App() {
             </Route>
 
           </Switch>
-
-        </div>
+        </Router>
 
       </div>
-
-    </Router>
+    </div>
 
   );
 }
