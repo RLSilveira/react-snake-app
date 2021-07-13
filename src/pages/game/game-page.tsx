@@ -1,11 +1,20 @@
 import React from "react";
+import GameComponent from "../../components/game/game-component";
+import GameContext from "../../contexts/game-context";
+import './game-page.css';
 
-const JogoPage = () => {
+const GamePage = () => {
+
     return (
-        <div>
-            Jogo Page
-        </div>
+        <GameContext>
+
+            <div className="content">
+
+                <GameComponent></GameComponent>
+
+            </div>
+        </GameContext>
     );
 }
 
-export default JogoPage;
+export default GamePage;
