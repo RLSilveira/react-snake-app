@@ -8,5 +8,6 @@ export interface GameContextType {
     food?: Pointer,
     level: number,
     mapHeigth: number,
-    mapWidth: number
+    mapWidth: number,
+    score: number
 }

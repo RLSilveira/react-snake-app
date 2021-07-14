@@ -1,11 +1,16 @@
-.food-img {
-  height: 2vmin;
+.food {
+  height: 100%;
+  width: 100%;
+}
+
+.food img {
+  height: 4vmin;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .food-img {
-    animation: food-img-spin infinite 20s linear;
+  .food img {
+    animation: food-img-spin infinite 5s linear;
   }
 }
 

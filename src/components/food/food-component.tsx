@@ -3,8 +3,8 @@ import './food-component.css';
 
 const FoodComponent = () => {
     return (
-        <div>Food
-            <img src="food.png" className="food-img" alt="food" />
+        <div className="food">
+            <img src="food.png" alt="food" />
         </div>
     );
 }
