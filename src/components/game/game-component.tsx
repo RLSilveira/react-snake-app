@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import { EDirection } from "../../contexts/EDirection";
 import { GameContext } from "../../contexts/game-context";
 import { GameContextType } from "../../contexts/game-context-type";
+import GameBoard from "../game-board/game-board-component";
 import './game-component.css';
 
 const GameComponent = () => {
 
-    const { setDirection, snake, direction, level } = useContext<GameContextType>(GameContext);
+    const { setDirection, score, direction, level } = useContext<GameContextType>(GameContext);
 
     const handleKeyboardEvent = (e: React.KeyboardEvent<Element>) => {
         if (e.key === EDirection.Left ||
@@ -17,27 +18,26 @@ const GameComponent = () => {
         }
     };
 
-
     return (
 
-        <div className="GameArea" tabIndex={0}
-            onKeyDown={handleKeyboardEvent}>
+        <div className="GameArea" tabIndex={0} onKeyDown={handleKeyboardEvent}>
 
             <p>
-                {level}
+                Level: {level}
             </p>
             <p>
-                {direction}
+                Direction: {direction}
             </p>
             <p>
-                {snake.length}
+                Score: {score}
             </p>
 
             <hr></hr>
 
-            {
-                snake.map(p => <p key={`${p.x}-${p.y}`}>{p.x} - {p.y}</p>)
-            }
+            <div className="table">
+
+                <GameBoard></GameBoard>
+            </div>
         </div>
 
     );
