@@ -1,8 +1,13 @@
-// import { Todo } from "../models/Todo";
+import { EDirection } from "./EDirection";
+import { Pointer } from "./Pointer";
 
 export interface GameContextType {
-    // todos: Todo[];
-    // addTodo(title: string): void;
-    // removeTodo(todo: Todo): void;
-    // toggle(todo: Todo): void;
+    snake: Pointer[];
+    direction: EDirection,
+    setDirection(direction: EDirection): void,
+    food?: Pointer,
+    level: number,
+    mapHeigth: number,
+    mapWidth: number,
+    score: number
 }
