@@ -1,6 +1,6 @@
-import { EDirection } from "./EDirection";
+import { EDirection } from "../enums/EDirection";
 
-export class Pointer {
+export class Vector {
     constructor(
         public x: number,
         public y: number,
@@ -26,6 +26,6 @@ export class Pointer {
                 break;
         }
 
-        return new Pointer(x, y, direction);
+        return new Vector(x, y, direction);
     }
 }

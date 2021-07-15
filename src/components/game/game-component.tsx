@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { EDirection } from "../../contexts/EDirection";
+import { EDirection } from "../../enums/EDirection";
 import { GameContext } from "../../contexts/game-context";
 import { GameContextType } from "../../contexts/game-context-type";
 import GameBoard from "../game-board/game-board-component";
@@ -22,20 +22,21 @@ const GameComponent = () => {
 
         <div className="GameArea" tabIndex={0} onKeyDown={handleKeyboardEvent}>
 
-            <p>
-                Level: {level}
-            </p>
-            <p>
-                Direction: {direction}
-            </p>
-            <p>
-                Score: {score}
-            </p>
+            <div className="Infos">
+                <span>
+                    Level: {level}
+                </span>
+                <span>
+                    Direction: {direction}
+                </span>
+                <span>
+                    Score: {score}
+                </span>
+            </div>
 
             <hr></hr>
 
-            <div className="table">
-
+            <div className="GameBoard">
                 <GameBoard></GameBoard>
             </div>
         </div>
