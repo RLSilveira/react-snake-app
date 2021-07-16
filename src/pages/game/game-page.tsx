@@ -11,7 +11,6 @@ const GamePage = () => {
     return (
         <GameContext>
             <div className="content">
-                {user}
                 <GameComponent></GameComponent>
             </div>
         </GameContext>
