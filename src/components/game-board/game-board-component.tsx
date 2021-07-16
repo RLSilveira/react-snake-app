@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
-import { GameContext } from "../../contexts/game-context";
-import { GameContextType } from "../../contexts/game-context-type";
+import React, { useContext, useEffect, useState } from "react";
+import { GameContext, GameContextType } from "../../contexts/game-context";
 import FoodComponent from "../food/food-component";
 import SnakeHeadComponent from "../snake-head-component/snake-head-component";
 import SnakeTailComponent from "../snake-tail-component/snake-tail-component";
@@ -11,34 +10,48 @@ const GameBoard = () => {
 
     const { snake, food, mapHeigth, mapWidth } = useContext<GameContextType>(GameContext);
 
-    let board = [];
+    const [board, setBoard] = useState<JSX.Element[][]>();
 
-    for (let row = 0; row < mapHeigth; row++) {
+    // render loop
+    useEffect(() => {
 
-        let r = [];
+        let _board: JSX.Element[][] = [[]];
 
-        for (let col = 0; col < mapWidth; col++) {
+        for (let row = 0; row < mapHeigth; row++) {
 
+            let r: JSX.Element[] = [];
 
-            if (snake[0].x === col && snake[0].y === row)
-                r.push(<div className="cell">
-                    <SnakeHeadComponent></SnakeHeadComponent>
-                </div>)
-            else if (snake.some((p, i) => p.x === col && p.y === row))
-                r.push(<div className="cell">
-                    <SnakeTailComponent></SnakeTailComponent>
-                </div>)
-            else if (food?.x === col && food.y === row)
-                r.push(<div className="cell">
-                    <FoodComponent></FoodComponent>
-                </div>)
-            else
+            for (let col = 0; col < mapWidth; col++) {
 
-                r.push(<div className="cell"></div>)
+                if (snake[0].x === col && snake[0].y === row)
+                    r.push(
+                        <div key={`${row}-${col}`} className="cell">
+                            <SnakeHeadComponent></SnakeHeadComponent>
+                        </div>)
+
+                else if (snake.some((p, i) => p.x === col && p.y === row))
+                    r.push(
+                        <div key={`${row}-${col}`} className="cell">
+                            <SnakeTailComponent></SnakeTailComponent>
+                        </div>)
+                else if (food?.x === col && food.y === row)
+                    r.push(
+                        <div key={`${row}-${col}`} className="cell">
+                            <FoodComponent></FoodComponent>
+                        </div>)
+                else
+                    r.push(
+                        <div key={`${row}-${col}`} className="cell"></div>)
+            }
+
+            _board.push(r);
         }
 
-        board.push(r);
-    }
+        setBoard(_board);
+
+    }, [food?.x, food?.y, mapHeigth, mapWidth, snake]);
+
+
 
     return (
         <div className="board">

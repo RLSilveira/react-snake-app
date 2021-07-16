@@ -1,11 +1,14 @@
 import { EDirection } from "../enums/EDirection";
+import { Point } from "./Point";
 
-export class Vector {
+export class Vector extends Point {
     constructor(
-        public x: number,
-        public y: number,
+        x: number,
+        y: number,
         public direction?: EDirection
-    ) { }
+    ) {
+        super(x, y);
+    }
 
     getNeighborhood(direction: EDirection) {
         let x = this.x;

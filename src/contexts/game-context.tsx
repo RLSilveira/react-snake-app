@@ -1,24 +1,28 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { EDirection } from '../enums/EDirection';
-import { GameContextType } from "./game-context-type";
 import { Vector } from '../models/vector';
+import { Point } from "../models/Point";
 
 
 const MAP_WIDTH = 16;
 const MAP_HEIGTH = 16;
-const START_LEVEL = 0.5 * 1000;
+const START_LEVEL = 1 * 500;
 
+export interface GameContextType {
+    snake: Vector[];
+    food?: Point,
+    score: number,
+    level: number,
+    isGameOver: boolean,
 
-export const GameContext = createContext<GameContextType>({
-    snake: [],
-    direction: EDirection.Right,
-    setDirection: (direction: EDirection) => { },
-    food: undefined,
-    level: START_LEVEL,
-    mapHeigth: MAP_HEIGTH,
-    mapWidth: MAP_WIDTH,
-    score: 0
-});
+    direction: EDirection,
+    handleDirection(direction: EDirection): void,
+
+    mapHeigth: number,
+    mapWidth: number
+}
+
+export const GameContext = createContext<GameContextType>({} as GameContextType);
 
 const GameProvider = (props: any) => {
     const mapHeigth = MAP_HEIGTH;
@@ -26,7 +30,8 @@ const GameProvider = (props: any) => {
 
     const [isGameOver, setIsGameOver] = useState<boolean>(false);
 
-    const [level, setLevel] = useState<number>(1000);
+    const [level, setLevel] = useState<number>(START_LEVEL);
+    const [score, setScore] = useState<number>(0);
 
     // inicializa a cobrinha
     const [snake, setSnake] = useState<Vector[]>([
@@ -35,74 +40,90 @@ const GameProvider = (props: any) => {
         new Vector(1, 1, EDirection.Right),
     ]);
 
-    const score = snake.length - 3;
-
     // inicializa a comida: trocar para random depois
     const [food, setFood] = useState<Vector>(new Vector(5, 5));
 
     // initial direction
     const [direction, setDirection] = useState<EDirection>(EDirection.Right);
 
-    const setActualDirection = (newDirection: EDirection) => {
-        if ((newDirection === EDirection.Down && direction !== EDirection.Up) ||
-            (newDirection === EDirection.Up && direction !== EDirection.Down) ||
-            (newDirection === EDirection.Left && direction !== EDirection.Right) ||
-            (newDirection === EDirection.Right && direction !== EDirection.Left)) {
-
-            console.log('set direction: ', newDirection);
-            setDirection(newDirection);
-        }
+    // verificar se pode ir para a direção informada
+    const handleDirection = async (newDirection: EDirection) => {
+        console.log(direction, newDirection);
+        setDirection(oldDirection => ((newDirection === EDirection.Down && oldDirection !== EDirection.Up)
+            || (newDirection === EDirection.Up && oldDirection !== EDirection.Down)
+            || (newDirection === EDirection.Left && oldDirection !== EDirection.Right)
+            || (newDirection === EDirection.Right && oldDirection !== EDirection.Left))
+            ? newDirection
+            : oldDirection);
     }
 
+    // game over
+    const gameOver = () => {
+        console.log('GAME OVER');
+        setIsGameOver(true)
+        // clearTimeout(timerId);
+    };
+
+    // level up
+    const levelUp = useCallback(() => {
+        console.log('LEVEL UP');
+        // timerId && clearTimeout(timerId);
+        setLevel(level => level - (level * score / 100));
+        // setTimerId(gameLoop());
+    }, [score]);
+
     //game loop
-    useEffect(() => {
-        const loop = setTimeout(() => {
+    const gameLoop = () => {
+        console.log("START GAME LOOP");
+
+        const gameLoopValidations = () => {
+            console.log('GAME LOOP', (new Date()).toLocaleTimeString(), direction, food.x, food.y, mapHeigth, mapWidth, snake.length);
 
             // próxima posição
             let head = snake[0].getNeighborhood(direction);
 
-            // *** valida movimentos
-            let gameOver = false;
-
             // valida bordas
             if (head.x < 0 || head.x >= mapWidth ||
                 head.y < 0 || head.y >= mapHeigth) {
-                setIsGameOver(true);
+                gameOver();
+                return;
             }
 
             // valida cauda
-            if (snake.some((p, i) => i > 0 && p.x === head.x && p.y === head.y)) {
-                setIsGameOver(true);
+            if (snake.some((p, isTail) => isTail && p.x === head.x && p.y === head.y)) {
+                gameOver();
+                return;
             }
 
-            if (isGameOver) {
-                console.log('Game over');
+            let snakeTemp = snake.map(x => x);
+
+            // comeu a comida
+            if (head.x === food.x && head.y === food.y) {
+                setScore(score => score++);
+                setFood(new Vector(7, 1));
             }
             else {
-                let snakeTemp = snake;
-
-                // comeu a comida
-                if (head.x === food.x && head.y === food.y)
-                    setFood(new Vector(7, 1));
-                else
-                    snakeTemp.pop();
-
-                setSnake([head, ...snakeTemp]);
+                snakeTemp.pop();
             }
 
-            // função para aumentar o nível
-            // setLevel(level - (level * 0.1));
-            setLevel(500);
+            // move
+            setSnake(snake => [head, ...snakeTemp]);
+        }
 
+        const timerId = setTimeout(() => {
+            levelUp();
+            !isGameOver && gameLoopValidations();
         }, level);
 
-        return () => clearTimeout(loop);
+        return () => clearTimeout(timerId);
+    };
 
-    }, [snake, direction, level, food, isGameOver, mapWidth, mapHeigth, score]);
+    useEffect(gameLoop, [direction, food.x, food.y, isGameOver, level, levelUp, mapHeigth, mapWidth, snake]);
+
 
 
     return (
-        <GameContext.Provider value={{ snake, direction, food, level, setDirection: setActualDirection, mapHeigth, mapWidth, score }}>
+        <GameContext.Provider value={{ snake, direction, food, level, handleDirection, mapHeigth, mapWidth, score, isGameOver }}>
             {props.children}
         </GameContext.Provider>
     )

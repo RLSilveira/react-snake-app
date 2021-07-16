@@ -10,9 +10,11 @@ import { Link } from "react-router-dom";
 const LoginPage = () => {
   const [user, setUser] = useState<string>("");
   const [records, setRecords] = useState<Record[]>();
+
   useEffect(() => {
     getRecords();
   }, []);
+
   const getRecords = async () => {
     var r = await recordesService.Get();
     setRecords(r);
