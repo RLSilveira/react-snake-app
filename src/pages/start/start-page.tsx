@@ -3,8 +3,12 @@ import "./start-page.css";
 import "../../services/records-service";
 import recordesService from "../../services/records-service";
 import { Record } from "../../models/record";
+import { Link } from "react-router-dom";
+
+
 
 const LoginPage = () => {
+  const [user, setUser] = useState<string>("");
   const [records, setRecords] = useState<Record[]>();
   useEffect(() => {
     getRecords();
@@ -18,10 +22,10 @@ const LoginPage = () => {
     <>
       <div className="corpo">
         <h2>Recordes:</h2>
-        <ol>
+        <ol className="ol">
           {records?.map((record: Record, i: any) => {
             return (
-              <li key={i}>
+              <li key={i} className="li">
                 {record.user} {record.score}
               </li>
             );
@@ -29,16 +33,21 @@ const LoginPage = () => {
         </ol>
       </div>
 
-      <form action="/form/submit" method="post">
+      <div className="botao">
         <div>
-          <label className="label">Nome: </label>
-          <input type="text" />
+          <label>Nome: </label>
+          <input type="text" value={user} onChange={e => setUser(e.target.value)} />
         </div>
-      </form>
 
-      <button className="button" type="button">
-        Jogar!
-      </button>
+        <Link
+          to={{
+            pathname: "/game",
+            state: user,
+          }}
+        >
+          <button className="button">Jogar</button>
+        </Link>
+      </div>
     </>
   );
 };
