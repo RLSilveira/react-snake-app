@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { EDirection } from '../enums/EDirection';
 import { Vector } from '../models/vector';
 import { Point } from "../models/Point";
@@ -61,35 +61,31 @@ const GameProvider = (props: any) => {
     const gameOver = () => {
         console.log('GAME OVER');
         setIsGameOver(true)
-        // clearTimeout(timerId);
     };
 
     // level up
-    const levelUp = useCallback(() => {
-        console.log('LEVEL UP');
-        // timerId && clearTimeout(timerId);
-        setLevel(level => level - (level * score / 100));
-        // setTimerId(gameLoop());
+    useEffect(() => {
+        setLevel(level => level * 75 / 100);
     }, [score]);
 
     //game loop
     const gameLoop = () => {
-        console.log("START GAME LOOP");
+        console.log("START GAME LOOP", level);
 
         const gameLoopValidations = () => {
             console.log('GAME LOOP', (new Date()).toLocaleTimeString(), direction, food.x, food.y, mapHeigth, mapWidth, snake.length);
 
-            // próxima posição
+            // next position
             let head = snake[0].getNeighborhood(direction);
 
-            // valida bordas
+            // valid colision with the map board
             if (head.x < 0 || head.x >= mapWidth ||
                 head.y < 0 || head.y >= mapHeigth) {
                 gameOver();
                 return;
             }
 
-            // valida cauda
+            // valid colision with the tail
             if (snake.some((p, isTail) => isTail && p.x === head.x && p.y === head.y)) {
                 gameOver();
                 return;
@@ -97,9 +93,9 @@ const GameProvider = (props: any) => {
 
             let snakeTemp = snake.map(x => x);
 
-            // comeu a comida
+            // eat food
             if (head.x === food.x && head.y === food.y) {
-                setScore(score => score++);
+                setScore(score => score + 1);
                 setFood(new Vector(7, 1));
             }
             else {
@@ -107,20 +103,18 @@ const GameProvider = (props: any) => {
             }
 
             // move
-            setSnake(snake => [head, ...snakeTemp]);
+            setSnake([head, ...snakeTemp]);
         }
 
         const timerId = setTimeout(() => {
-            levelUp();
             !isGameOver && gameLoopValidations();
         }, level);
 
         return () => clearTimeout(timerId);
     };
 
-    useEffect(gameLoop, [direction, food.x, food.y, isGameOver, level, levelUp, mapHeigth, mapWidth, snake]);
-
-
+    // run the game
+    useEffect(gameLoop, [direction, food.x, food.y, isGameOver, level, mapHeigth, mapWidth, snake]);
 
     return (
         <GameContext.Provider value={{ snake, direction, food, level, handleDirection, mapHeigth, mapWidth, score, isGameOver }}>
