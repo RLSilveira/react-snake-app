@@ -1,11 +1,11 @@
-import { EDirection } from "./EDirection";
-import { Pointer } from "./Pointer";
+import { EDirection } from "../enums/EDirection";
+import { Vector } from "../models/vector";
 
 export interface GameContextType {
-    snake: Pointer[];
+    snake: Vector[];
     direction: EDirection,
     setDirection(direction: EDirection): void,
-    food?: Pointer,
+    food?: Vector,
     level: number,
     mapHeigth: number,
     mapWidth: number,

@@ -1,3 +1,14 @@
 .GameArea {
   height: 100vh;
 }
+
+.Infos {
+  background-color: rebeccapurple;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  color: cyan;
+}
+
+.GameBoard {
+}
